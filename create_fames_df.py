@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import shutil
+from datetime import timedelta
 
 def create_dataframe_from_images(output_folder):
     # Get a list of all saved image files in the output folder
@@ -51,8 +52,21 @@ for index, row in c305_passes.iterrows():
     # Append the subsetted DataFrame to the list with a name like "pass1", "pass2", ...
     pass_name = f"pass_{pass_no + 1}"
     pass_no+=1
-    subset_df['pass_name'] = pass_name
-    pass_dfs.append(subset_df)
+    
+    # Create subset from 30 seconds before start_datetime to start_datetime with 'direction' column set to 'in'
+    #subset_in = frame_times[(frame_times['timestamp'] >= (start_datetime - timedelta(seconds=30))) & (frame_times['timestamp'] <= start_datetime)].copy()
+    #subset_in['direction'] = 'in'
+    #subset_in['pass_name'] = pass_name
+
+    # Create subset from end_datetime to 30 seconds afterwards with 'direction' column set to 'out'
+    subset_out = frame_times[(frame_times['timestamp'] >= end_datetime) & (frame_times['timestamp'] <= (end_datetime + timedelta(seconds=30)))].copy()
+    subset_out['direction'] = 'out'
+    subset_out['pass_name'] = pass_name
+
+    # Append both subsetted DataFrames to the list
+    #pass_dfs.append(subset_in)
+    pass_dfs.append(subset_out)
+    
 
 # Concatenate the list of DataFrames into a single DataFrame
 result_df = pd.concat(pass_dfs, ignore_index=True)
@@ -64,9 +78,10 @@ root_folder = '/localhome/home/earhbu/WORK/DCMEX2'
 for index, row in result_df.iterrows():
     pass_name = row['pass_name']
     timestamp = row['timestamp']
+    direction = row['direction']
 
     # Create folder structure
-    folder_path = os.path.join(root_folder, timestamp.strftime("%Y%m%d"), pass_name)
+    folder_path = os.path.join(root_folder, timestamp.strftime("%Y%m%d"), str(pass_name))
 
     # Create folder if it doesn't exist
     os.makedirs(folder_path, exist_ok=True)
