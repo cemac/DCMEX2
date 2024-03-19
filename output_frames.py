@@ -56,7 +56,7 @@ def extract_frames(input_video_path, output_folder):
 
     print("Frames extraction completed.")
 
-video_paths = glob.glob('faam-video/faam-video-rfc_faam_20220727_r0_c305_*.mp4')
+video_paths = glob.glob('faam-video/faam-video-ffc_faam_20220727_r0_c305_*.mp4')
 output_folder = 'output_frames'
 for video_path in video_paths:
     extract_frames(video_path, output_folder)
