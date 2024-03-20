@@ -3,7 +3,9 @@ import pandas as pd
 import shutil
 from datetime import timedelta
 
-camera='ffc'
+camera='rfc'
+flight_id ='c305'
+letter=['a','b','c','d','e','f','g','h','j','k']
 
 def create_dataframe_from_images(output_folder):
     # Get a list of all saved image files in the output folder
@@ -33,11 +35,11 @@ def create_dataframe_from_images(output_folder):
     return df
 
 # Create DataFrame of video frames 
-output_folder = 'output_frames/c305'
+output_folder = 'output_frames/' + flight_id + '/' + camera
 frame_times = create_dataframe_from_images(output_folder)
 
 cloud_passes = pd.read_csv('FAAM_cloudpass_info.csv')
-c305_passes = cloud_passes[cloud_passes['flight_id'] == 'c305']
+c305_passes = cloud_passes[cloud_passes['flight_id'] == flight_id]
 
 # Create a list to store the subsetted DataFrames
 pass_dfs = []
@@ -52,23 +54,52 @@ for index, row in c305_passes.iterrows():
     subset_df = frame_times[(frame_times['timestamp'] >= start_datetime) & (frame_times['timestamp'] <= end_datetime)].copy()
     
     # Append the subsetted DataFrame to the list with a name like "pass1", "pass2", ...
-    pass_name = f"pass_{pass_no + 1}"
+    pass_name = f"pass_{pass_no + 1:02}"
     pass_no+=1
+    
+    if row['npasses'] == 1.0:
+        if camera=='ffc':
+            # Create subset from 30 seconds before start_datetime to start_datetime with 'direction' column set to 'in'
+            subset_pass = frame_times[(frame_times['timestamp'] >= (start_datetime - timedelta(seconds=30))) & (frame_times['timestamp'] <= start_datetime)].copy()
+            subset_pass['direction'] = 'in'
+            subset_pass['pass_name'] = pass_name
+            subset_pass['start_time'] = start_datetime
+        elif camera=='rfc':
+            # Create subset from end_datetime to 30 seconds afterwards with 'direction' column set to 'out'
+            subset_pass = frame_times[(frame_times['timestamp'] >= end_datetime) & (frame_times['timestamp'] <= (end_datetime + timedelta(seconds=30)))].copy()
+            subset_pass['direction'] = 'out'
+            subset_pass['pass_name'] = pass_name
+            subset_pass['start_time'] =  end_datetime
+        # Append both subsetted DataFrames to the list
+        #pass_dfs.append(subset_in)
+        pass_dfs.append(subset_pass)
 
-    if camera=='ffc':
-       # Create subset from 30 seconds before start_datetime to start_datetime with 'direction' column set to 'in'
-       subset_pass = frame_times[(frame_times['timestamp'] >= (start_datetime - timedelta(seconds=70))) & (frame_times['timestamp'] <= start_datetime)].copy()
-       subset_pass['direction'] = 'in'
-       subset_pass['pass_name'] = pass_name
-    elif camera=='rfc':
-       # Create subset from end_datetime to 30 seconds afterwards with 'direction' column set to 'out'
-       subset_pass = frame_times[(frame_times['timestamp'] >= end_datetime) & (frame_times['timestamp'] <= (end_datetime + timedelta(seconds=30)))].copy()
-       subset_pass['direction'] = 'out'
-       subset_pass['pass_name'] = pass_name
-
-    # Append both subsetted DataFrames to the list
-    #pass_dfs.append(subset_in)
-    pass_dfs.append(subset_pass)
+    elif row['npasses'] > 1.0:
+        starttimes = row['passes_start_index']
+        starttimes = starttimes.strip('[]')
+        starttimes = starttimes.split()
+        endtimes = row['passes_end_index']
+        endtimes = endtimes.strip('[]')
+        endtimes = endtimes.split()
+        for subpass in range(int(row['npasses'])):
+            print(starttimes)
+            print(row['start_index'])
+            starttime = start_datetime+timedelta(seconds=(int(starttimes[subpass])-int(row['start_index'])))
+            endtime = end_datetime+timedelta(seconds=(int(endtimes[subpass])-int(row['end_index'])))
+            if camera=='ffc':
+                # Create subset from 30 seconds before start_datetime to start_datetime with 'direction' column set to 'in'
+                subset_pass = frame_times[(frame_times['timestamp'] >= (starttime - timedelta(seconds=30))) & (frame_times['timestamp'] <= starttime)].copy()
+                subset_pass['direction'] = 'in'
+                subset_pass['pass_name'] = pass_name + '_'+ letter[subpass]
+                subset_pass['start_time'] = starttime
+            elif camera=='rfc':
+                # Create subset from end_datetime to 30 seconds afterwards with 'direction' column set to 'out'
+                subset_pass = frame_times[(frame_times['timestamp'] >= endtime) & (frame_times['timestamp'] <= (endtime + timedelta(seconds=30)))].copy()
+                subset_pass['direction'] = 'out'
+                subset_pass['pass_name'] = pass_name + '_'+ letter[subpass]
+                subset_pass['start_time'] =  endtime
+            pass_dfs.append(subset_pass)  
+   
     
 
 # Concatenate the list of DataFrames into a single DataFrame
@@ -82,15 +113,16 @@ for index, row in result_df.iterrows():
     pass_name = row['pass_name']
     timestamp = row['timestamp']
     direction = row['direction']
+    time_label = row['start_time']
 
     # Create folder structure
-    folder_path = os.path.join(root_folder, timestamp.strftime("%Y%m%d"), str(pass_name), camera)
+    folder_path = os.path.join(root_folder, timestamp.strftime("%Y%m%d"), str(pass_name)+'_'+time_label.strftime("%H%M%S")+'_'+camera)
 
     # Create folder if it doesn't exist
     os.makedirs(folder_path, exist_ok=True)
 
     # Copy file to the new folder
-    src_file_path = os.path.join('output_frames', row['flight_id'], row['filename'])
+    src_file_path = os.path.join('output_frames', row['flight_id'],camera, row['filename'])
     dst_file_path = os.path.join(folder_path, row['filename'])
     shutil.copy(src_file_path, dst_file_path)
 
