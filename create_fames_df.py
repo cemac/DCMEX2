@@ -1,27 +1,24 @@
 import os
+import glob
 import pandas as pd
 import shutil
 from datetime import timedelta
 
 camera='rfc'
-flight_id ='c305'
 letter=['a','b','c','d','e','f','g','h','j','k']
 
 def create_dataframe_from_images(output_folder):
     # Get a list of all saved image files in the output folder
-    image_files = [file for file in os.listdir(output_folder) if file.endswith('.png')]
-
+    #image_files = [file for file in output_folder]
     #Extract information from the image filenames
     data = []
-    for image_file in image_files:
+    for image_file in output_folder:
         filename_parts = image_file.split('_')
-        flight_id = filename_parts[1]
-        date = filename_parts[2]
-        times = filename_parts[3][0:-4]
-
+        flight_id = filename_parts[2]
+        date = filename_parts[3]
+        times = filename_parts[4][0:-4]
         # Convert timestamp to full datetime format
         full_timestamp = pd.to_datetime(date+'_'+times, format="%Y%m%d_%H%M%S")
-
         data.append({
             'filename': image_file,
             'flight_id': flight_id,
@@ -35,18 +32,18 @@ def create_dataframe_from_images(output_folder):
     return df
 
 # Create DataFrame of video frames 
-output_folder = 'output_frames/' + flight_id + '/' + camera
+output_folder = glob.glob('output_frames/*/*/' + camera +'/*.png')
 frame_times = create_dataframe_from_images(output_folder)
 
 cloud_passes = pd.read_csv('FAAM_cloudpass_info.csv')
-c305_passes = cloud_passes[cloud_passes['flight_id'] == flight_id]
+#305_passes = cloud_passes[cloud_passes['flight_id'] == flight_id]
 
 # Create a list to store the subsetted DataFrames
 pass_dfs = []
 pass_no = 0
 
 # Iterate over rows in c305_passes
-for index, row in c305_passes.iterrows():
+for index, row in cloud_passes.iterrows():
     start_datetime = pd.to_datetime(row['start_datetime'])
     end_datetime = pd.to_datetime(row['end_datetime'])
 
@@ -82,8 +79,6 @@ for index, row in c305_passes.iterrows():
         endtimes = endtimes.strip('[]')
         endtimes = endtimes.split()
         for subpass in range(int(row['npasses'])):
-            print(starttimes)
-            print(row['start_index'])
             starttime = start_datetime+timedelta(seconds=(int(starttimes[subpass])-int(row['start_index'])))
             endtime = end_datetime+timedelta(seconds=(int(endtimes[subpass])-int(row['end_index'])))
             if camera=='ffc':
@@ -107,25 +102,29 @@ result_df = pd.concat(pass_dfs, ignore_index=True)
 
 
 # root_folder = '/localhome/home/earhbu/WORK/DCMEX2'
-root_folder = '/home/users/hburns/GWS/DCMEX/users/hburns/DCMEX2'
+root_folder = '/home/users/hburns/GWS/DCMEX/users/hburns/DCMEX2/cloud_pass_frames'
 
 
 # Iterate over rows in result_df
 for index, row in result_df.iterrows():
+
     pass_name = row['pass_name']
     timestamp = row['timestamp']
     direction = row['direction']
     time_label = row['start_time']
-
+    print(timestamp.strftime("%Y%m%d"))
     # Create folder structure
     folder_path = os.path.join(root_folder, timestamp.strftime("%Y%m%d"), str(pass_name)+'_'+time_label.strftime("%H%M%S")+'_'+camera)
 
     # Create folder if it doesn't exist
     os.makedirs(folder_path, exist_ok=True)
+    filename_parts = row['filename'].split('/')
 
+    fname=filename_parts[-1]
+    print(fname)
     # Copy file to the new folder
-    src_file_path = os.path.join('output_frames', row['flight_id'],camera, row['filename'])
-    dst_file_path = os.path.join(folder_path, row['filename'])
+    src_file_path = os.path.join('output_frames', row['flight_id'],timestamp.strftime("%Y%m%d"),camera, fname)
+    dst_file_path = os.path.join(folder_path, fname)
     shutil.copy(src_file_path, dst_file_path)
 
 # Display the folder structure
