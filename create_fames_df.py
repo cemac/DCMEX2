@@ -4,7 +4,7 @@ import pandas as pd
 import shutil
 from datetime import timedelta
 
-camera='rfc'
+camera='ffc'
 letter=['a','b','c','d','e','f','g','h','j','k']
 
 def create_dataframe_from_images(output_folder):

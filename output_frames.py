@@ -4,7 +4,7 @@ from datetime import datetime
 import pandas as pd
 import os
 
-camera='rfc'
+camera='ffc'
 
 def extract_frames(input_video_path, output_folder):
     # Open the video file
