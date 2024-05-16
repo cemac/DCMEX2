@@ -4,7 +4,7 @@ from datetime import datetime
 import pandas as pd
 import os
 
-camera='ffc'
+camera='rfc'
 
 def extract_frames(input_video_path, output_folder):
     # Open the video file
@@ -59,6 +59,7 @@ def extract_frames(input_video_path, output_folder):
     print("Frames extraction completed.")
 
 video_paths = glob.glob('faam-video/faam-video-'+camera+'*.mp4')
+video_paths = glob.glob('faam-video/faam-video-'+camera+'*20220727*.mp4')
 #print('faam-video/faam-video-'+camera+'_faam_'+date+'_r0_'+flight+'_*.mp4')
 output_folder = 'output_frames'
 for video_path in video_paths:

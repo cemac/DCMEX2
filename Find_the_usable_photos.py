@@ -123,7 +123,10 @@ for dir_name, sub_dirs, files in os.walk(root_dir):
         ax.imshow(img)
         ax.axis('off') # save figure
     if num_images > 0:
-        plt.savefig(os.path.join(dir_name,subdir_name) + '.png')
+        fig.suptitle(subdir_name, fontsize=16)
+        plt.tight_layout()
+        fig.subplots_adjust(top=0.88)
+        plt.savefig(root_dir+'/' + subdir_name + '.png')
         plt.close(fig)
     
 

@@ -4,7 +4,7 @@ import pandas as pd
 import shutil
 from datetime import timedelta
 
-camera='ffc'
+camera='rfc'
 letter=['a','b','c','d','e','f','g','h','j','k']
 
 def create_dataframe_from_images(output_folder):
@@ -32,11 +32,11 @@ def create_dataframe_from_images(output_folder):
     return df
 
 # Create DataFrame of video frames 
-output_folder = glob.glob('output_frames/*/*/' + camera +'/*.png')
+output_folder = glob.glob('output_frames/c305/20220727/' + camera +'/*.png')
+#output_folder = glob.glob('output_frames/*/*/' + camera +'/*.png')
 frame_times = create_dataframe_from_images(output_folder)
 
 cloud_passes = pd.read_csv('FAAM_cloudpass_info.csv')
-#305_passes = cloud_passes[cloud_passes['flight_id'] == flight_id]
 
 # Create a list to store the subsetted DataFrames
 pass_dfs = []
@@ -102,7 +102,7 @@ result_df = pd.concat(pass_dfs, ignore_index=True)
 
 
 # root_folder = '/localhome/home/earhbu/WORK/DCMEX2'
-root_folder = '/home/users/hburns/GWS/DCMEX/users/hburns/DCMEX2/cloud_pass_frames'
+root_folder = '/home/users/hburns/GWS/DCMEX/users/hburns/DCMEX2'#/cloud_pass_frames'
 
 
 # Iterate over rows in result_df
