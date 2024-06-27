@@ -1,12 +1,13 @@
 import glob
 import cv2
 from datetime import datetime
+from datetime import timedelta
 import pandas as pd
 import os
 
 camera='rfc'
 
-def extract_frames(input_video_path, output_folder):
+def extract_frames(input_video_path, output_folder, shift=0):
     # Open the video file
     cap = cv2.VideoCapture(input_video_path)
 
@@ -41,7 +42,7 @@ def extract_frames(input_video_path, output_folder):
 
         # Get the current timestamp based on the starting time of the recording
         start_time = datetime.strptime(f"{date_part}_{time_part}", "%Y%m%d_%H%M%S")
-        current_time = start_time + pd.to_timedelta(frame_count / fps, unit='s')
+        current_time = start_time + pd.to_timedelta(frame_count / fps, unit='s') + timedelta(seconds=shift)
         timestamp = current_time.strftime("%Y%m%d_%H%M%S")
 
         # Save the frame as an image with timestamp and FlightID in the filename
@@ -58,9 +59,10 @@ def extract_frames(input_video_path, output_folder):
 
     print("Frames extraction completed.")
 
-video_paths = glob.glob('faam-video/faam-video-'+camera+'*.mp4')
-video_paths = glob.glob('faam-video/faam-video-'+camera+'*20220727*.mp4')
+#video_paths = glob.glob('faam-video/faam-video-'+camera+'*.mp4')
+video_paths = glob.glob('faam-video/faam-video-'+camera+'*20220801*.mp4')
 #print('faam-video/faam-video-'+camera+'_faam_'+date+'_r0_'+flight+'_*.mp4')
 output_folder = 'output_frames'
+lag_time = 10
 for video_path in video_paths:
-    extract_frames(video_path, output_folder)
+    extract_frames(video_path, output_folder, shift=lag_time)

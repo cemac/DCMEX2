@@ -4,7 +4,7 @@ import pandas as pd
 import shutil
 from datetime import timedelta
 
-camera='rfc'
+camera='ffc'
 letter=['a','b','c','d','e','f','g','h','j','k']
 
 def create_dataframe_from_images(output_folder):
@@ -32,7 +32,7 @@ def create_dataframe_from_images(output_folder):
     return df
 
 # Create DataFrame of video frames 
-output_folder = glob.glob('output_frames/c305/20220727/' + camera +'/*.png')
+output_folder = glob.glob('output_frames/c303/20220725/' + camera +'/*.png')
 #output_folder = glob.glob('output_frames/*/*/' + camera +'/*.png')
 frame_times = create_dataframe_from_images(output_folder)
 
@@ -57,13 +57,13 @@ for index, row in cloud_passes.iterrows():
     if row['npasses'] == 1.0:
         if camera=='ffc':
             # Create subset from 30 seconds before start_datetime to start_datetime with 'direction' column set to 'in'
-            subset_pass = frame_times[(frame_times['timestamp'] >= (start_datetime - timedelta(seconds=25))) & (frame_times['timestamp'] <= (start_datetime + timedelta(seconds=10)))].copy()
+            subset_pass = frame_times[(frame_times['timestamp'] >= (start_datetime - timedelta(seconds=30))) & (frame_times['timestamp'] <= (start_datetime ))].copy()
             subset_pass['direction'] = 'in'
             subset_pass['pass_name'] = pass_name
             subset_pass['start_time'] = start_datetime
         elif camera=='rfc':
             # Create subset from end_datetime to 30 seconds afterwards with 'direction' column set to 'out'
-            subset_pass = frame_times[(frame_times['timestamp'] >= (end_datetime -  timedelta(seconds=10))) & (frame_times['timestamp'] <= (end_datetime + timedelta(seconds=25)))].copy()
+            subset_pass = frame_times[(frame_times['timestamp'] >= (end_datetime - timedelta(seconds=2))) & (frame_times['timestamp'] <= (end_datetime + timedelta(seconds=30)))].copy()
             subset_pass['direction'] = 'out'
             subset_pass['pass_name'] = pass_name
             subset_pass['start_time'] =  end_datetime
@@ -83,13 +83,13 @@ for index, row in cloud_passes.iterrows():
             endtime = end_datetime+timedelta(seconds=(int(endtimes[subpass])-int(row['end_index'])))
             if camera=='ffc':
                 # Create subset from 30 seconds before start_datetime to start_datetime with 'direction' column set to 'in'
-                subset_pass = frame_times[(frame_times['timestamp'] >= (starttime - timedelta(seconds=25))) & (frame_times['timestamp'] <= (starttime + timedelta(seconds=10)))].copy()
+                subset_pass = frame_times[(frame_times['timestamp'] >= (starttime - timedelta(seconds=40))) & (frame_times['timestamp'] <= (starttime))].copy()
                 subset_pass['direction'] = 'in'
                 subset_pass['pass_name'] = pass_name + '_'+ letter[subpass]
                 subset_pass['start_time'] = starttime
             elif camera=='rfc':
                 # Create subset from end_datetime to 30 seconds afterwards with 'direction' column set to 'out'
-                subset_pass = frame_times[(frame_times['timestamp'] >= (endtime -  timedelta(seconds=10))) & (frame_times['timestamp'] <= (endtime + timedelta(seconds=25)))].copy()
+                subset_pass = frame_times[(frame_times['timestamp'] >= endtime - timedelta(seconds=2) ) & (frame_times['timestamp'] <= (endtime + timedelta(seconds=30)))].copy()
                 subset_pass['direction'] = 'out'
                 subset_pass['pass_name'] = pass_name + '_'+ letter[subpass]
                 subset_pass['start_time'] =  endtime
@@ -101,8 +101,8 @@ for index, row in cloud_passes.iterrows():
 result_df = pd.concat(pass_dfs, ignore_index=True)
 
 
-# root_folder = '/localhome/home/earhbu/WORK/DCMEX2'
-root_folder = '/home/users/hburns/GWS/DCMEX/users/hburns/DCMEX2'#/cloud_pass_frames'
+root_folder = '/localhome/home/earhbu/WORK/DCMEX2'
+#root_folder = '/home/users/hburns/GWS/DCMEX/users/hburns/DCMEX2'#/cloud_pass_frames'
 
 
 # Iterate over rows in result_df
