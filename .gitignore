@@ -1,7 +1,15 @@
 .ipynb_checkpoints/
+20220725/
+20220726/
 20220727/
+20220730/
+20220731/
+20220801/
+tests/
+timelapse/
 20220727_old/
 denoised_frames_test/
-faam-video/
+faam-video*/
 output_frames/
 cloud_pass_frames/
+*.nc
