@@ -1,10 +1,12 @@
 .ipynb_checkpoints/
+20220723/
 20220725/
 20220726/
 20220727/
 20220730/
 20220731/
 20220801/
+20220807/
 tests/
 timelapse/
 20220727_old/
@@ -13,3 +15,6 @@ faam-video*/
 output_frames/
 cloud_pass_frames/
 *.nc
+faam-video
+__pycache__/
+
