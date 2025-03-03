@@ -17,4 +17,6 @@ cloud_pass_frames/
 *.nc
 faam-video
 __pycache__/
-
+figures/
+figures_30/
+cloud_heights*.csv
