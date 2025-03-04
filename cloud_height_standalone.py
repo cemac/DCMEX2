@@ -21,7 +21,7 @@ if module_dir not in sys.path:
     sys.path.append(module_dir)
 import height_calculator as hc
 # dummy file name
-file_name_full = 'cloud_heights/images/20220723/pass_271_ffc/frame_c307_20220730_162917_sky_bluesky_ffc.png'
+file_name_full = '/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_heights/images/20220723/pass_271_ffc/frame_c307_20220730_162917_sky_bluesky_ffc.png'
 # set the camera name this chages the edge detection settings, and pitch correction
 
 # Initialize the argument parser
@@ -63,7 +63,7 @@ print(f'file_name_full: {file_name_full}')
 
 # Define functions to extract required information 
 pass_number = file_name_full.split('/')[-2].split('_')[1]
-cloud_passes = pd.read_csv('FAAM_cloudpass_info.csv')
+cloud_passes = pd.read_csv('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/FAAM_cloudpass_info.csv')
 # file manipulation functions
 def extract_pass_number(file_name):
     """
@@ -243,12 +243,11 @@ if camera == 'ffc':
 if camera == 'rfc':
     rfc = True
     ffc = False
-
 dataset = xr.open_dataset(glob.glob('/badc/faam/data/2022/*/core_processed/core_faam_'+date+'_v005_r0_*_1hz.nc')[0])
 timeframe= file_name.split('_')[3]
 timestamp = pd.to_datetime(date+'_'+timeframe, format="%Y%m%d_%H%M%S")
-image_file = glob.glob('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0][0:-4]+'.png')[0]
-print('date and time: ', image_file)
+image_file = glob.glob('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0][0:-4]+'.png')[0]
+print('Date and Time: ', image_file)
 print('Processing: ', file_name)
 print('Pass number: ', pass_number)
 aircraft_df = extract_variables(dataset)
@@ -392,7 +391,7 @@ for offset in range(search_range):
 
 if pixel_height_override:
     pixel_height = 576-yo
-    print('Overriding pixel height to: ', pixel_height)
+    print('Overriding pixel height to: ', yo)
 else:
     if found_points:
         x, y = found_points[-1]
@@ -454,12 +453,13 @@ print('pass number: ', pass_number)
 pass_diff1=cloud_top_height1-aircraft_pass_position['alt']
 
 img = io.imread(image_file)
+fig, ax = plt.subplots(figsize=(14, 10))
 plt.imshow(img)
 try:
     plt.plot(x_target, 576-pixel_height, 'ro')
     
     # Add text at the red dot position
-    plt.text(10, 576 - pixel_height+30, f'Distance: {int(D1)}m, Height: {int(cloud_top_height1)} m, aircraft pass height: {int(aircraft_pass_position["alt"])} m',
+    plt.text(150, 576 - pixel_height+30, f'D: {int(D1)}m, CTH: {int(cloud_top_height1)} m, APH: {int(aircraft_pass_position["alt"])} m',
                 color='k', fontsize=12, ha='left', va='bottom')
     plt.text(300, 480, f'aircraft height: {int(aircraft_position['alt'])} m', 
                 color='k', fontsize=12, ha='left', va='bottom')
@@ -470,6 +470,12 @@ try:
                 horizontalalignment='left',
                 verticalalignment='center',
                 transform = plt.gca().transAxes,alpha=0.4)
+    # Add a custom legend with just text
+    legend_text = "Legend:\n D  = Distance\n CTH = Cloud Top Height\n APH = Aircraft Pass Height"
+
+    # Position the text at the desired location
+    plt.text(730, 16, legend_text, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
+   
 except ValueError:
     print('skipping')
    
@@ -495,8 +501,7 @@ except:
     plt.savefig(home+'pass_{}_{}_{}.png'.format(pass_number, timestamp,camera_name),
                  bbox_inches='tight', pad_inches=0.5)
     print('saving to: ', home+'pass_{}_{}_{}.png'.format(pass_number,timestamp,camera_name))
-plt.show()
-plt.cla()
+
 
 df.at[0,'Distance'] = D
 df.at[0,'plane_height'] = aircraft_position['alt']
@@ -517,3 +522,6 @@ try:
 except:
     df.to_csv(home+'cloud_heights_'+date+timeframe+'.csv')
     print('saving to: ', home+'cloud_heights_'+date+timeframe+'.csv')
+
+plt.show()
+plt.cla()

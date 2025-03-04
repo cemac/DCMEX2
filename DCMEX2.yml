@@ -5,6 +5,7 @@ dependencies:
   - python=3
   - matplotlib
   - numpy
+  - netCDF4
   - xarray
   - pandas
   - pillow
