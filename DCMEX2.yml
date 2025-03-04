@@ -1,0 +1,13 @@
+name: cloud_heights
+channels:
+  - conda-forge
+dependencies:
+  - python=3
+  - matplotlib
+  - numpy
+  - xarray
+  - pandas
+  - pillow
+  - scikit-image
+  - opencv
+  
