@@ -11,6 +11,8 @@ import cv2
 import sys
 import glob
 import os
+from pathlib import Path
+home = Path.home()
 import pandas as pd
 from datetime import timedelta
 import argparse
@@ -485,8 +487,14 @@ plt.plot(x, y, color='red',linestyle='dashed',alpha=0.3)
   
 plt.title('Pass {}_{}, Timestamp: {}.'.format(pass_number,camera_name, timestamp)+'\n Estimated plane pass height between {}m below cloud top'.format(int(pass_diff1)), fontsize=20)
 
-plt.savefig('pass_{}_{}_{}.png'.format(pass_number,
-                                                timestamp,camera_name), bbox_inches='tight', pad_inches=0.5)
+try:
+    plt.savefig('pass_{}_{}_{}.png'.format(pass_number, timestamp,camera_name),
+                 bbox_inches='tight', pad_inches=0.5)
+    print('saving to: ', 'pass_{}_{}_{}.png'.format(pass_number,timestamp,camera_name))
+except: 
+    plt.savefig(home+'pass_{}_{}_{}.png'.format(pass_number, timestamp,camera_name),
+                 bbox_inches='tight', pad_inches=0.5)
+    print('saving to: ', home+'pass_{}_{}_{}.png'.format(pass_number,timestamp,camera_name))
 plt.show()
 plt.cla()
 
@@ -503,5 +511,9 @@ df.at[0,'pass_number'] = pass_number
 df.at[0,'camera'] = camera
 df.at[0,'timestamp'] = timestamp
 
-
-df.to_csv('cloud_heights_'+date+timeframe+'.csv')
+try:
+    df.to_csv('cloud_heights_'+date+timeframe+'.csv')
+    print('saving to: ', 'cloud_heights_'+date+timeframe+'.csv')
+except:
+    df.to_csv(home+'cloud_heights_'+date+timeframe+'.csv')
+    print('saving to: ', home+'cloud_heights_'+date+timeframe+'.csv')
