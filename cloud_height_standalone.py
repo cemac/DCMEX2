@@ -8,15 +8,18 @@ from PIL import Image
 from skimage import color
 from skimage import io
 import cv2
-import height_calculator as hc
+import sys
 import glob
 import os
 import pandas as pd
 from datetime import timedelta
 import argparse
- 
+module_dir = "/gws/nopw/j04/dcmex/users/hburns/DCMEX2/"
+if module_dir not in sys.path:
+    sys.path.append(module_dir)
+import height_calculator as hc
 # dummy file name
-file_name_full = 'figures/pass_271_ffc/frame_c307_20220730_162917_sky_bluesky_ffc.png'
+file_name_full = 'cloud_heights/images/20220723/pass_271_ffc/frame_c307_20220730_162917_sky_bluesky_ffc.png'
 # set the camera name this chages the edge detection settings, and pitch correction
 
 # Initialize the argument parser
@@ -239,10 +242,10 @@ if camera == 'rfc':
     rfc = True
     ffc = False
 
-dataset = xr.open_dataset(glob.glob('core_faam_'+date+'_v005_r0_*_1hz.nc')[0])
+dataset = xr.open_dataset(glob.glob('/badc/faam/data/2022/*/core_processed/core_faam_'+date+'_v005_r0_*_1hz.nc')[0])
 timeframe= file_name.split('_')[3]
 timestamp = pd.to_datetime(date+'_'+timeframe, format="%Y%m%d_%H%M%S")
-image_file = glob.glob(date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0][0:-4]+'.png')[0]
+image_file = glob.glob('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0][0:-4]+'.png')[0]
 print('date and time: ', image_file)
 print('Processing: ', file_name)
 print('Pass number: ', pass_number)
