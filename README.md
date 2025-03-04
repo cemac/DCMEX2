@@ -12,7 +12,7 @@ Can be found on JASMIN here:
 
 to install this please use 
 
-`conda env create -f DCMEX2.yml`
+`conda env create -f /gws/nopw/j04/dcmex/users/hburns/DCMEX2/DCMEX2.yml`
 
 ## Using the tool
 
