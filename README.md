@@ -24,7 +24,7 @@ to install this please use
    * `export DCMEX2pth=/gws/nopw/j04/dcmex/users/hburns/DCMEX2/`
    * `export cldimgpth=/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_heights/images`
    * and run
-     `python $DCMEX2pth/cloud_height_standalone.py --file cldimgpth/20220730/pass_276_ffc/frame_c307_20220730_165926_sky_bluesky_ffc.png --px 380 --py 300 --D 5000`
+     `python $DCMEX2pth/cloud_height_standalone.py --file $cldimgpth/20220730/pass_276_ffc/frame_c307_20220730_165926_sky_bluesky_ffc.png --px 380 --py 300 --D 5000`
 
 ### tool arguments:
 
