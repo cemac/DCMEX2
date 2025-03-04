@@ -37,5 +37,5 @@ to install this please use
 ## Outputs
 
 * prints to screen variables used and heights calculated
-* prints to csv in current working directory all variables used in calculations including aircraft data
-* saves a png of new annotated figure (you must rename to prevent overwriting with different pixel point) 
+* prints to csv all variables used in calculations including aircraft data (current working directory or home dir if no permission in cwd)
+* saves a png of new annotated figure (you must rename to prevent overwriting with different pixel point) (current working directory or home dir if no permission in cwd)
