@@ -459,10 +459,8 @@ try:
     plt.plot(x_target, 576-pixel_height, 'ro')
     
     # Add text at the red dot position
-    plt.text(150, 576 - pixel_height+30, f'D: {int(D1)}m, CTH: {int(cloud_top_height1)} m, APH: {int(aircraft_pass_position["alt"])} m',
-                color='k', fontsize=12, ha='left', va='bottom')
-    plt.text(300, 480, f'aircraft height: {int(aircraft_position['alt'])} m', 
-                color='k', fontsize=12, ha='left', va='bottom')
+    plt.text(150, 576 - pixel_height+30, f'D: {int(D1)}m, CTH: {int(cloud_top_height1)} m, APH: {int(aircraft_pass_position["alt"])} m', color='k', fontsize=12, ha='left', va='bottom')
+    plt.text(300, 480, f'aircraft height: {int(aircraft_position["alt"])} m', color='k', fontsize=12, ha='left', va='bottom')
     
     # Display the roll_angle
     plt.text(0.1, 0.5, f'{aircraft_position['roll_angles']:,.2f}',

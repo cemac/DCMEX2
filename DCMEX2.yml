@@ -2,7 +2,7 @@ name: cloud_heights
 channels:
   - conda-forge
 dependencies:
-  - python=3
+  - python>=3.12
   - matplotlib
   - numpy
   - netCDF4
