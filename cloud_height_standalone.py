@@ -139,7 +139,7 @@ def extract_variables(dataset):
     lat = dataset['LAT_GIN'].data[:]
     lon = dataset['LON_GIN'].data[:]
     pitch = dataset['PTCH_GIN'].data[:]
-    alt = dataset['PALT_RVS'].data[:]
+    alt = dataset['ALT_GIN'].data[:]
     veln = dataset['VELN_GIN'].data[:]
     vele = dataset['VELE_GIN'].data[:]
     roll_times = roll.Time
