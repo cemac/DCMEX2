@@ -4,7 +4,7 @@ import pandas as pd
 import shutil
 from datetime import timedelta
 
-camera='rfc'
+camera='ffc'
 letter=['a','b','c','d','e','f','g','h','j','k']
 
 def create_dataframe_from_images(output_folder):
@@ -32,7 +32,7 @@ def create_dataframe_from_images(output_folder):
     return df
 
 # Create DataFrame of video frames 
-output_folder = glob.glob('output_frames/c314/20220807/' + camera +'/*.png')
+output_folder = glob.glob('output_frames/c308/20220731/' + camera +'/*.png')
 #output_folder = glob.glob('output_frames/*/*/' + camera +'/*.png')
 frame_times = create_dataframe_from_images(output_folder)
 

@@ -59,11 +59,13 @@ if args.px is not None:
 
 # Print the values to verify
 print(f'file_name_full: {file_name_full}')
-
+BASE_DIR = Path("/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_heights/").resolve()
+file_path = Path(file_name_full).resolve()
+if not file_path.is_relative_to(BASE_DIR):
+        print(f"Error: File {file_path} is not inside {BASE_DIR}")
+        sys.exit(1)
 
 # Define functions to extract required information 
-pass_number = file_name_full.split('/')[-2].split('_')[1]
-cloud_passes = pd.read_csv('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/FAAM_cloudpass_info.csv')
 # file manipulation functions
 def extract_pass_number(file_name):
     """
@@ -76,11 +78,15 @@ def extract_pass_number(file_name):
         pass_number (str or list): The pass number extracted from the file name. If the pass number consists of two parts, it will be returned as a list. Otherwise, it will be returned as a string.
     """
     filepath_parts = file_name.split('/')
-    if len(filepath_parts[1].split('_')) > 4:
-        pass_number = filepath_parts[1].split('_')[1:3]
+    if len(filepath_parts[-2].split('_')) > 4:
+        pass_number = filepath_parts[-2].split('_')[1:3]
     else:
-        pass_number = filepath_parts[1].split('_')[1]
+        pass_number = filepath_parts[-2].split('_')[1]
     return pass_number
+
+pass_number = extract_pass_number(file_name_full)
+print('pass number: ', pass_number)
+cloud_passes = pd.read_csv('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/FAAM_cloudpass_info.csv')
 
 
 def extract_timestamp_from_filename(filepath):
@@ -235,8 +241,8 @@ df = pd.DataFrame(columns=columns)
 #extract info
 file_name= file_name_full.split('/')[-1]
 date=file_name.split('_')[2]
-camera_name = file_name.split('_')[-1].split('.')[0]
-camera = camera_name 
+camera_name = file_name_full.split('/')[-2].split('_')[-1]
+camera = camera_name
 if camera == 'ffc': 
     ffc = True
     rfc = False
@@ -246,13 +252,20 @@ if camera == 'rfc':
 dataset = xr.open_dataset(glob.glob('/badc/faam/data/2022/*/core_processed/core_faam_'+date+'_v005_r0_*_1hz.nc')[0])
 timeframe= file_name.split('_')[3]
 timestamp = pd.to_datetime(date+'_'+timeframe, format="%Y%m%d_%H%M%S")
-image_file = glob.glob('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0][0:-4]+'.png')[0]
+if len(pass_number)>1:
+    print('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number[0]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
+    image_file = glob.glob('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number[0]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
+else:
+    print('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
+    image_file = glob.glob('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
 print('Date and Time: ', image_file)
 print('Processing: ', file_name)
 print('Pass number: ', pass_number)
+print('Cammera: ',camera)
 aircraft_df = extract_variables(dataset)
 aircraft_position = get_closest_roll_angle(aircraft_df, timestamp)
-if isinstance(pass_number, list):
+if len(pass_number)==2:
+    print('extracting subpass info')
     pass_info = extract_cloud_pass_info(cloud_passes, pass_number[0], subpass=pass_number[1])
 else:
     pass_info = extract_cloud_pass_info(cloud_passes, pass_number)
@@ -415,6 +428,8 @@ else:
 
 pixel_height_adj=pixel_height-576/2
 print('Pixel height above center: ', pixel_height_adj)
+print('pitch pass: ',aircraft_pass_position['pitch'])
+print('pitch now: ',aircraft_position['pitch'])
 
 if ffc:
     calculator1=hc.CloudHeightCalculator(pixel_height_adj,D,aircraft_pass_position['pitch']-3)
@@ -459,7 +474,7 @@ try:
     plt.plot(x_target, 576-pixel_height, 'ro')
     
     # Add text at the red dot position
-    plt.text(150, 576 - pixel_height+30, f'D: {int(D1)}m, CTH: {int(cloud_top_height1)} m, APH: {int(aircraft_pass_position["alt"])} m', color='k', fontsize=12, ha='left', va='bottom')
+    plt.text(150, 576 - pixel_height+30, f'D: {int(D)}m, CTH: {int(cloud_top_height1)} m, APH: {int(aircraft_pass_position["alt"])} m', color='k', fontsize=12, ha='left', va='bottom')
     plt.text(300, 480, f'aircraft height: {int(aircraft_position["alt"])} m', color='k', fontsize=12, ha='left', va='bottom')
     
     # Display the roll_angle

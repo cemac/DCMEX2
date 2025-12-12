@@ -1,4 +1,3 @@
-
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
@@ -13,26 +12,27 @@ import height_calculator as hc
 import glob
 import os
 
+
 #framelist='frame_c301_20220723_172455_sky_bluesky.png'
-file_name_list = glob.glob('20220723/pass_97_b_*_ffc/*')
-dataset = xr.open_dataset('core_faam_20220723_v005_r0_c301_1hz.nc')
+file_name_list = glob.glob('cloud_pass_frames/20220725/*_ffc/*')
+dataset = xr.open_dataset('/badc/faam/data/2022/c303-jul-25/core_processed/core_faam_20220725_v005_r0_c303_1hz.nc')
 cloud_passes = pd.read_csv('FAAM_cloudpass_info.csv')
-ffc=True
-rfc=False
+ffc=False
+rfc=True
 
 def extract_pass_number(file_name):
     filepath_parts = file_name.split('/')
-    pass_number= filepath_parts[1].split('_')[1]
+    pass_number= filepath_parts[2].split('_')[1]
     return pass_number
 
 def extract_timestamp_from_filename(filepath):
     filepath_parts = filepath.split('/')
-    filename_parts = filepath_parts[2].split('_')
-    camera= filepath_parts[1].split('_')[3]
+    filename_parts = filepath_parts[3].split('_')
+    camera= filepath_parts[2].split('_')[3]
     date = filename_parts[2]
     times = filename_parts[3]
     full_timestamp = pd.to_datetime(date+'_'+times, format="%Y%m%d_%H%M%S")
-    return [camera, full_timestamp] 
+    return [camera, full_timestamp, times] 
 
 # Define a function to find the closest roll_time and get the corresponding roll_angle
 def get_closest_roll_angle(aircraft_df, frame_time):
@@ -87,7 +87,7 @@ def haversine( lon1, lat1, lon2, lat2, alt):
 for file_name in file_name_list:
     # Get the distance
     #extract info
-    camera, timestamp = extract_timestamp_from_filename(file_name)
+    camera, timestamp, strtime = extract_timestamp_from_filename(file_name)
     pass_number = extract_pass_number(file_name)
     aircraft_df = extract_variables(dataset)
     aircraft_position = get_closest_roll_angle(aircraft_df, timestamp)
@@ -228,5 +228,5 @@ for file_name in file_name_list:
     # Plot line
     plt.plot(x, y, color='red',linestyle='dashed',alpha=0.3)
     plt.title('Pass {}, Timestamp: {}.'.format(pass_number, timestamp)+'\n Estimated plane flew {}m below cloud top'.format(int(pass_diff)), fontsize=20)
-    os.makedirs('figures/pass_{}/'.format(pass_number), exist_ok=True)
-    plt.savefig('{}.png'.format(file_name.split('/')[-1].split('.')[0]))
+    os.makedirs('figures/pass_{}_{}_{}/'.format(pass_number,strtime,camera), exist_ok=True)
+    plt.savefig('figures/pass_{}_{}_{}/'.format(pass_number,strtime,camera)+'{}.png'.format(file_name.split('/')[-1].split('.')[0]))
