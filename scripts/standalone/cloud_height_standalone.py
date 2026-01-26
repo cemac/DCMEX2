@@ -16,12 +16,12 @@ home = Path.home()
 import pandas as pd
 from datetime import timedelta
 import argparse
-module_dir = "/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/"
+module_dir = "/gws/nopw/j04/dcmex/users/hburns/DCMEX2/"
 if module_dir not in sys.path:
     sys.path.append(module_dir)
 import height_calculator as hc
 # dummy file name
-file_name_full = '/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/cloud_heights/images/20220723/pass_271_ffc/frame_c307_20220730_162917_sky_bluesky_ffc.png'
+file_name_full = '/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_heights/images/20220723/pass_271_ffc/frame_c307_20220730_162917_sky_bluesky_ffc.png'
 # set the camera name this chages the edge detection settings, and pitch correction
 
 # Initialize the argument parser
@@ -59,7 +59,7 @@ if args.px is not None:
 
 # Print the values to verify
 print(f'file_name_full: {file_name_full}')
-BASE_DIR = Path("/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/cloud_heights/").resolve()
+BASE_DIR = Path("/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_heights/").resolve()
 file_path = Path(file_name_full).resolve()
 if not file_path.is_relative_to(BASE_DIR):
         print(f"Error: File {file_path} is not inside {BASE_DIR}")
@@ -86,7 +86,7 @@ def extract_pass_number(file_name):
 
 pass_number = extract_pass_number(file_name_full)
 print('pass number: ', pass_number)
-cloud_passes = pd.read_csv('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/FAAM_cloudpass_info.csv')
+cloud_passes = pd.read_csv('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/FAAM_cloudpass_info.csv')
 
 
 def extract_timestamp_from_filename(filepath):
@@ -252,14 +252,12 @@ if camera == 'rfc':
 dataset = xr.open_dataset(glob.glob('/badc/faam/data/2022/*/core_processed/core_faam_'+date+'_v005_r0_*_1hz.nc')[0])
 timeframe= file_name.split('_')[3]
 timestamp = pd.to_datetime(date+'_'+timeframe, format="%Y%m%d_%H%M%S")
-if isinstance(pass_number, list):
-    print('pass is a subpass')
-    print('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number[0]+'_'+pass_number[1]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
-    image_file = glob.glob('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number[0]+'_'+pass_number[1]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
+if len(pass_number)>1:
+    print('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number[0]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
+    image_file = glob.glob('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number[0]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
 else:
-    print('primary pass')
-    print('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
-    image_file = glob.glob('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
+    print('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
+    image_file = glob.glob('/gws/nopw/j04/dcmex/users/hburns/DCMEX2/cloud_pass_frames/'+date+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
 print('Date and Time: ', image_file)
 print('Processing: ', file_name)
 print('Pass number: ', pass_number)
@@ -505,31 +503,17 @@ y = [img.shape[0] / 2 - line_length * np.sin(angle_rad), img.shape[0] / 2 + line
 
 # Plot line
 plt.plot(x, y, color='red',linestyle='dashed',alpha=0.3)
+  
+plt.title('Pass {}_{}, Timestamp: {}.'.format(pass_number,camera_name, timestamp)+'\n Estimated plane pass height between {}m below cloud top'.format(int(pass_diff1)), fontsize=20)
 
-if isinstance(pass_number, list):
-    plt.title('Pass {}_{}_{}, Timestamp: {}.'.format(pass_number[0],pass_number[1],camera_name, timestamp)+'\n Estimated plane pass height between {}m below cloud top'.format(int(pass_diff1)), fontsize=20)
-else:
-    plt.title('Pass {}_{}, Timestamp: {}.'.format(pass_number,camera_name, timestamp)+'\n Estimated plane pass height between {}m below cloud top'.format(int(pass_diff1)), fontsize=20)
-    
 try:
-    if isinstance(pass_number, list):
-        print(pass_number[0])
-        plt.savefig('pass_{}_{}_{}_{}.png'.format(pass_number[0],pass_number[1], timestamp,camera_name),
-                    bbox_inches='tight', pad_inches=0.5)
-        print('saving to: ', 'pass_{}_{}_{}_{}.png'.format(pass_number[0],pass_number[1],timestamp,camera_name))
-    else:
-        plt.savefig('pass_{}_{}_{}.png'.format(pass_number, timestamp,camera_name),
-                    bbox_inches='tight', pad_inches=0.5)
-        print('saving to: ', 'pass_{}_{}_{}.png'.format(pass_number,timestamp,camera_name))
-except:
-    if isinstance(pass_number, list):
-        plt.savefig(home+'pass_{}_{}_{}_{}.png'.format(pass_number[0],pass_number[1], timestamp,camera_name),
-                    bbox_inches='tight', pad_inches=0.5)
-        print('saving to: ', home+'pass_{}_{}_{}_{}.png'.format(pass_number[0],pass_number[1],timestamp,camera_name))
-    else:
-        plt.savefig(home+'pass_{}_{}_{}.png'.format(pass_number, timestamp,camera_name),
-                    bbox_inches='tight', pad_inches=0.5)
-        print('saving to: ', home+'pass_{}_{}_{}.png'.format(pass_number,timestamp,camera_name))
+    plt.savefig('pass_{}_{}_{}.png'.format(pass_number, timestamp,camera_name),
+                 bbox_inches='tight', pad_inches=0.5)
+    print('saving to: ', 'pass_{}_{}_{}.png'.format(pass_number,timestamp,camera_name))
+except: 
+    plt.savefig(home+'pass_{}_{}_{}.png'.format(pass_number, timestamp,camera_name),
+                 bbox_inches='tight', pad_inches=0.5)
+    print('saving to: ', home+'pass_{}_{}_{}.png'.format(pass_number,timestamp,camera_name))
 
 
 df.at[0,'Distance'] = D
