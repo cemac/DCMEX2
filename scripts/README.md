@@ -9,4 +9,12 @@
    * takes camera and data
    * contains root output, input folders and lag table
 3. create_frames.py
-   *  
+   * takes camera and date
+   * creates pass_frames/date/camera/
+   * sorts by pass, then labels frames with blue sky,
+   * creates thumbnail with usable frames highlighted in green
+4. cloudtop_above_pass_all.py
+   * takes --date_to_use 20220731 --ffc
+   * creates cloud_heights/date/camera
+   * will calculate heights if bluesky is detected , will leave if not.
+   * creates a csv of time, pass  and cloud height delected etc
