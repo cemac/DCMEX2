@@ -5,12 +5,33 @@ from skimage import color, io
 from datetime import datetime, timedelta
 import glob
 import os
+import argparse
+import pandas as pd
 # -----------------------------
 # Parameters
 # -----------------------------
+parser = argparse.ArgumentParser(description="Process command-line arguments.")
+parser.add_argument("--date_to_use", type=int, required=True, help="Date in YYYYMMDD format")
+parser.add_argument("--ffc", action="store_true", help="Enable FFC mode")
+parser.add_argument("--rfc", action="store_true", help="Enable RFC mode")
 
-input_glob = "../faam-video/faam-video-ffc_faam_20220731*_1hz.mp4"
-start_offset_sec = 12      # start 10s after timestamp
+args = parser.parse_args()
+date_to_use=args.date_to_use
+if args.ffc:
+   camera='ffc'
+
+if args.rfc:
+   camera='rfc'
+
+
+input_glob = '../faam-video/faam-video-'+camera+'_faam_'+str(date_to_use)+'*_1hz.mp4'
+# Read the CSV
+df = pd.read_csv('input_data/lag_times.csv')
+# Make sure 'date' is treated as string (or int)
+df['date'] = df['date'].astype(str)
+lag_value = df.loc[df['date'] == str(date_to_use), 'lag'].values
+start_offset_sec = int(lag_value[0])   
+print('lag vaulue ',start_offset_sec)   
 clip_length_sec = 59 * 60  # 59 minutes
 mp4_speedup = 1
 
@@ -26,11 +47,11 @@ for input_file in sorted(glob.glob(input_glob)):
     time_str = filename.split("_")[-2]  # '153245'
 
     file_time = datetime.strptime(time_str, "%H%M%S")
-    video_start = file_time + timedelta(seconds=start_offset_sec)
+    video_start = file_time - timedelta(seconds=start_offset_sec)
     video_start_str = video_start.strftime("%H:%M:%S")
     # Convert to ffmpeg-style time strings if needed
-    start_time_sec = start_offset_sec
-    end_time_sec = start_offset_sec + clip_length_sec
+    start_time_sec = 60-start_offset_sec
+    end_time_sec = clip_length_sec - start_offset_sec
 
     # Build output filename
     mp4_out = input_file.replace(

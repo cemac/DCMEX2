@@ -34,9 +34,9 @@ if args.rfc:
    rfc=args.rfc
 
 if ffc==True:
-   file_name_list = glob.glob('../pass_frames/{}/*_{}/*'.format(date_to_use,'ffc'))
+   file_name_list = glob.glob('../pass_frames/{}/{}/*/*'.format(date_to_use,'ffc'))
 else:
-   file_name_list = glob.glob('../pass_frames/{}/*_{}/*'.format(date_to_use,'rfc'))
+   file_name_list = glob.glob('../pass_frames/{}/{}/*/*'.format(date_to_use,'rfc'))
 dataset = xr.open_dataset(glob.glob('/badc/faam/data/2022/*/core_processed/core_faam_{}_v005_r0_c*_1hz.nc'.format(date_to_use))[0])
 cloud_passes = pd.read_csv('input_data/FAAM_cloudpass_info.csv')
 
@@ -331,7 +331,7 @@ for file_name in file_name_list:
                     color='k', fontsize=12, ha='left', va='bottom')
             plt.text(10, 576 - pixel_height-20, f'Distance: {int(D2)}m, Height: {int(cloud_top_height2)} m, Pass_height: {int(aircraft_pass_position_end["alt"])} m', 
                     color='k', fontsize=12, ha='left', va='bottom')
-            plt.text(x_target-120, 480, f'aircraft height: {int(aircraft_position['alt'])} m', 
+            plt.text(380-120, 480, f'aircraft height: {int(aircraft_position['alt'])} m', 
                     color='k', fontsize=12, ha='left', va='bottom')
             
             # Display the roll_angle
@@ -355,15 +355,26 @@ for file_name in file_name_list:
 
     # Plot line
     plt.plot(x, y, color='red',linestyle='dashed',alpha=0.3)
-    if len(pass_number)==2:
-        print(strdate,pass_number[0],pass_number[1],strtime,camera)
-        plt.title('Pass {}_{}_{}, Timestamp: {}.'.format(pass_number[0],pass_number[1],camera, timestamp)+'\n Estimated plane pass height between {}m  and {}m below cloud top'.format(int(pass_diff1),int(pass_diff2)), fontsize=20)
-        os.makedirs('../cloud_heights/{}/pass_{}_{}_{}_{}/'.format(strdate,pass_number[0],pass_number[1],starttimestr,camera), exist_ok=True)
-        plt.savefig('../cloud_heights/{}/pass_{}_{}_{}_{}/'.format(strdate,pass_number[0],pass_number[1],starttimestr,camera)+'{}.png'.format(file_name.split('/')[-1].split('.')[0]))
+    if 'bluesky' in file_name:
+        if len(pass_number)==2:
+            print(strdate,pass_number[0],pass_number[1],strtime,camera)
+            plt.title('Pass {}_{}_{}, Timestamp: {}.'.format(pass_number[0],pass_number[1],camera, timestamp)+'\n Estimated plane pass height between {}m  and {}m below cloud top'.format(int(pass_diff1),int(pass_diff2)), fontsize=20)
+            os.makedirs('../cloud_heights/{}/pass_{}_{}_{}_{}/'.format(strdate,pass_number[0],pass_number[1],starttimestr,camera), exist_ok=True)
+            plt.savefig('../cloud_heights/{}/pass_{}_{}_{}_{}/'.format(strdate,pass_number[0],pass_number[1],starttimestr,camera)+'{}.png'.format(file_name.split('/')[-1].split('.')[0]))
+        else:
+            plt.title('Pass {}_{}, Timestamp: {}.'.format(pass_number,camera, timestamp)+'\n Estimated plane pass height between  {}m  and {}m below cloud top'.format(int(pass_diff1),int(pass_diff2)), fontsize=20)
+            os.makedirs('../cloud_heights/{}/pass_{}_{}_{}/'.format(strdate,pass_number,starttimestr,camera), exist_ok=True)
+            plt.savefig('../cloud_heights/{}/pass_{}_{}_{}/'.format(strdate,pass_number,starttimestr,camera)+'{}.png'.format(file_name.split('/')[-1].split('.')[0]))
     else:
-        plt.title('Pass {}_{}, Timestamp: {}.'.format(pass_number,camera, timestamp)+'\n Estimated plane pass height between  {}m  and {}m below cloud top'.format(int(pass_diff1),int(pass_diff2)), fontsize=20)
-        os.makedirs('../cloud_heights/{}/pass_{}_{}_{}/'.format(strdate,pass_number,starttimestr,camera), exist_ok=True)
-        plt.savefig('../cloud_heights/{}/pass_{}_{}_{}/'.format(strdate,pass_number,starttimestr,camera)+'{}.png'.format(file_name.split('/')[-1].split('.')[0]))
+        if len(pass_number)==2:
+            print(strdate,pass_number[0],pass_number[1],strtime,camera)
+            plt.title('Pass {}_{}_{}, Timestamp: {}.'.format(pass_number[0],pass_number[1],camera, timestamp)+'\n No Estimated plane pass height', fontsize=20)
+            os.makedirs('../cloud_heights/{}/pass_{}_{}_{}_{}/'.format(strdate,pass_number[0],pass_number[1],starttimestr,camera), exist_ok=True)
+            plt.savefig('../cloud_heights/{}/pass_{}_{}_{}_{}/'.format(strdate,pass_number[0],pass_number[1],starttimestr,camera)+'{}.png'.format(file_name.split('/')[-1].split('.')[0]))
+        else:
+            plt.title('Pass {}_{}, Timestamp: {}.'.format(pass_number,camera, timestamp)+'\n No Estimated plane pass height', fontsize=20)
+            os.makedirs('../cloud_heights/{}/pass_{}_{}_{}/'.format(strdate,pass_number,starttimestr,camera), exist_ok=True)
+            plt.savefig('../cloud_heights/{}/pass_{}_{}_{}/'.format(strdate,pass_number,starttimestr,camera)+'{}.png'.format(file_name.split('/')[-1].split('.')[0]))
     plt.cla()
     
     if 'bluesky' in file_name:

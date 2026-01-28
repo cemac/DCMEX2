@@ -3,9 +3,21 @@ import glob
 import pandas as pd
 import shutil
 from datetime import timedelta
+import argparse
 
-camera='ffc'
-date='20220731'
+parser = argparse.ArgumentParser(description="Process command-line arguments.")
+parser.add_argument("--date_to_use", type=int, required=True, help="Date in YYYYMMDD format")
+parser.add_argument("--ffc", action="store_true", help="Enable FFC mode")
+parser.add_argument("--rfc", action="store_true", help="Enable RFC mode")
+
+args = parser.parse_args()
+date=str(args.date_to_use)
+if args.ffc:
+   camera='ffc'
+
+if args.rfc:
+   camera='rfc'
+
 letter=['a','b','c','d','e','f','g','h','j','k']
 root_folder = '/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/pass_frames'
 output_folder = glob.glob('../frames/*/'+date+'/' + camera +'/*.png')
@@ -114,7 +126,7 @@ for index, row in result_df.iterrows():
     time_label = row['start_time']
     print(timestamp.strftime("%Y%m%d"))
     # Create folder structure
-    folder_path = os.path.join(root_folder, timestamp.strftime("%Y%m%d"), str(pass_name)+'_'+time_label.strftime("%H%M%S")+'_'+camera)
+    folder_path = os.path.join(root_folder, timestamp.strftime("%Y%m%d"), camera,str(pass_name)+'_'+time_label.strftime("%H%M%S")+'_'+camera)
 
     # Create folder if it doesn't exist
     os.makedirs(folder_path, exist_ok=True)

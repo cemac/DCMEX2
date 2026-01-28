@@ -8,13 +8,27 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import re
+import argparse
+
+parser = argparse.ArgumentParser(description="Process command-line arguments.")
+parser.add_argument("--date_to_use", type=int, required=True, help="Date in YYYYMMDD format")
+parser.add_argument("--ffc", action="store_true", help="Enable FFC mode")
+parser.add_argument("--rfc", action="store_true", help="Enable RFC mode")
+
+args = parser.parse_args()
+date=str(args.date_to_use)
+if args.ffc:
+   camera='ffc'
+
+if args.rfc:
+   camera='rfc'
 
 # Define range for blue color in HSV
 lower_blue = np.array([90,30,50])
 upper_blue = np.array([130,255,255])
 
-date='20220731'
-root_dir = '../pass_frames/'+date
+
+root_dir = '../pass_frames/'+date+'/'+camera
 
 
 # Load the images along with their file names
