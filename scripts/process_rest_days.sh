@@ -1,5 +1,5 @@
 #!/bin/bash                                                                                                                                                                                                       
-#SBATCH --job-name=new1                                                                                                                                                                                      
+#SBATCH --job-name=new2                                                                                                                                                                                      
 #SBATCH --partition=standard
 #SBATCH --qos=high                                                                                                                                                                                                
 #SBATCH --time=12:00:00                                                                                                                                                                                           
@@ -14,7 +14,7 @@ echo "activating python env"
 conda activate cloud_heights
 
 
-dates=(20220723  20220725  20220726  20220727)
+dates=(20220730 20220807)
 
 
 # Loop over each date

@@ -72,13 +72,13 @@ for index, row in cloud_passes.iterrows():
     if row['npasses'] == 1.0:
         if camera=='ffc':
             # Create subset from 30 seconds before start_datetime to start_datetime with 'direction' column set to 'in'
-            subset_pass = frame_times[(frame_times['timestamp'] >= (start_datetime - timedelta(seconds=30))) & (frame_times['timestamp'] <= (start_datetime ))].copy()
+            subset_pass = frame_times[(frame_times['timestamp'] >= (start_datetime - timedelta(seconds=40))) & (frame_times['timestamp'] <= (start_datetime ))].copy()
             subset_pass['direction'] = 'in'
             subset_pass['pass_name'] = pass_name
             subset_pass['start_time'] = start_datetime
         elif camera=='rfc':
             # Create subset from end_datetime to 30 seconds afterwards with 'direction' column set to 'out'
-            subset_pass = frame_times[(frame_times['timestamp'] >= (end_datetime - timedelta(seconds=2))) & (frame_times['timestamp'] <= (end_datetime + timedelta(seconds=30)))].copy()
+            subset_pass = frame_times[(frame_times['timestamp'] >= (end_datetime - timedelta(seconds=2))) & (frame_times['timestamp'] <= (end_datetime + timedelta(seconds=40)))].copy()
             subset_pass['direction'] = 'out'
             subset_pass['pass_name'] = pass_name
             subset_pass['start_time'] =  end_datetime

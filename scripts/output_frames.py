@@ -60,7 +60,7 @@ def extract_frames(input_video_path, output_folder, shift=0):
 
         # Get the current timestamp based on the starting time of the recording
         start_time = datetime.strptime(f"{date_part}_{time_part}", "%Y%m%d_%H%M%S")
-        current_time = start_time + pd.to_timedelta(frame_count / fps, unit='s') - timedelta(seconds=shift)
+        current_time = start_time + pd.to_timedelta(frame_count / fps, unit='s') + timedelta(seconds=shift)
         timestamp = current_time.strftime("%Y%m%d_%H%M%S")
 
         # Save the frame as an image with timestamp and FlightID in the filename

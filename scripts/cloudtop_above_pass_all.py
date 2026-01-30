@@ -204,7 +204,8 @@ for file_name in file_name_list:
         #img_grey = color.rgb2gray(img)
         img_grey = cv2.bilateralFilter(img_masked, 9,75,75)
         cv_grey = cv2.GaussianBlur((img_grey * 255).astype(np.uint8), (7, 7), 0)
-        cv2.imwrite('cloud_mask.png', cv_grey)
+        os.makedirs('mask_im/{}/{}/'.format(strdate,camera), exist_ok=True)
+        cv2.imwrite('mask_im/{}/{}/cloud_mask{}.png'.format(strdate,camera,i), cv_grey)
         edges = cv2.Canny(cv_grey, 50, 250)
         edges[NOTSKY::,:]=0
         edges[:,0:20]=0
@@ -220,8 +221,9 @@ for file_name in file_name_list:
         thickness = 8  # Adjust this value to control the thickness of the drawn contours
         edge_image = cv2.imread(file_name).copy()
         cv2.drawContours(edge_image, contours, -1, (0, 255, 0), thickness)
-        cv2.imwrite('cloud_edge.png', edge_image)
-        cloud_edge=Image.open('cloud_edge.png')
+        os.makedirs('edge_im/{}/{}/'.format(strdate,camera), exist_ok=True)
+        cv2.imwrite('edge_im/{}/{}/cloud_edge{}.png'.format(strdate,camera,i), edge_image)
+        cloud_edge=Image.open('edge_im/{}/{}/cloud_edge{}.png'.format(strdate,camera,i))
 
         x_target = 380
         found_points = []

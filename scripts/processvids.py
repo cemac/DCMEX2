@@ -41,17 +41,21 @@ mp4_speedup = 1
 for input_file in sorted(glob.glob(input_glob)):
 
     filename = os.path.basename(input_file)
+    if filename.split('_')[-3]=='clean':
+        print('skipping ',filename)
+        continue 
     print(filename)
     # Extract HHMMSS from filename
     # Example: ..._c308_153245_1hz.mp4
     time_str = filename.split("_")[-2]  # '153245'
 
     file_time = datetime.strptime(time_str, "%H%M%S")
-    video_start = file_time - timedelta(seconds=start_offset_sec)
+    video_start = file_time 
     video_start_str = video_start.strftime("%H:%M:%S")
+    video_file_str = video_start.strftime("%H%M%S")
     # Convert to ffmpeg-style time strings if needed
-    start_time_sec = 60-start_offset_sec
-    end_time_sec = clip_length_sec - start_offset_sec
+    start_time_sec = 0
+    end_time_sec = clip_length_sec 
 
     # Build output filename
     mp4_out = input_file.replace(
@@ -60,7 +64,7 @@ for input_file in sorted(glob.glob(input_glob)):
 
     print(f"Processing: {input_file}")
     print(f" Start time (filename): {file_time.time()}")
-    print(f" Actual  Start time (+10s): {video_start.time()}")
+    print(f" Actual  Start time:  {video_start.time()}")
     print(f" Output file: {mp4_out}")
 
     # Video start timestamp start time is 10 after time stamp
@@ -106,7 +110,7 @@ for input_file in sorted(glob.glob(input_glob)):
         # Add timestamp
         # -----------------------------
         elapsed_seconds = (frame_idx - start_frame) / fps
-        current_time = video_start + timedelta(seconds=elapsed_seconds)
+        current_time = video_start + timedelta(seconds=elapsed_seconds) + timedelta(seconds=start_offset_sec)
         timestamp_str = current_time.strftime("%H:%M:%S")
 
         font = cv2.FONT_HERSHEY_SIMPLEX

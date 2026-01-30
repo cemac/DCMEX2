@@ -21,7 +21,7 @@ if module_dir not in sys.path:
     sys.path.append(module_dir)
 import height_calculator as hc
 # dummy file name
-file_name_full = '/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/cloud_heights/images/20220723/pass_271_ffc/frame_c307_20220730_162917_bluesky_ffc.png'
+file_name_full = '/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/cloud_heights/20220723/pass_271_ffc/frame_c307_20220730_162917_bluesky_ffc.png'
 # set the camera name this chages the edge detection settings, and pitch correction
 
 # Initialize the argument parser
@@ -508,9 +508,9 @@ y = [img.shape[0] / 2 - line_length * np.sin(angle_rad), img.shape[0] / 2 + line
 plt.plot(x, y, color='red',linestyle='dashed',alpha=0.3)
 
 if isinstance(pass_number, list):
-    plt.title('Pass {}_{}_{}, Timestamp: {}.'.format(pass_number[0],pass_number[1],camera_name, timestamp)+'\n Estimated plane pass height between {}m below cloud top'.format(int(pass_diff1)), fontsize=20)
+    plt.title('Pass {}_{}_{}, Timestamp: {}.'.format(pass_number[0],pass_number[1],camera_name, timestamp)+'\n Estimated plane pass height {}m below cloud top using distance {}m'.format(int(pass_diff1),D), fontsize=20)
 else:
-    plt.title('Pass {}_{}, Timestamp: {}.'.format(pass_number,camera_name, timestamp)+'\n Estimated plane pass height between {}m below cloud top'.format(int(pass_diff1)), fontsize=20)
+    plt.title('Pass {}_{}, Timestamp: {}.'.format(pass_number,camera_name, timestamp)+'\n Estimated plane pass height {}m below cloud top using distance {}m'.format(int(pass_diff1),D), fontsize=20)
     
 try:
     if isinstance(pass_number, list):
