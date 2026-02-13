@@ -2,7 +2,7 @@
 #SBATCH --job-name=new1                                                                                                                                                                                      
 #SBATCH --partition=standard
 #SBATCH --qos=high                                                                                                                                                                                                
-#SBATCH --time=12:00:00                                                                                                                                                                                           
+#SBATCH --time=18:00:00                                                                                                                                                                                           
 #SBATCH --cpus-per-task=3                                                                                                                                                                                         
 #SBATCH --mem=16G                                                                                                                                                                                                 
 #SBATCH --account=dcmex                                                                                                                                                                                           
@@ -14,7 +14,7 @@ echo "activating python env"
 conda activate cloud_heights
 
 
-dates=(20220723  20220725  20220726  20220727)
+dates=(20220725)
 
 
 # Loop over each date

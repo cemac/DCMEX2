@@ -1,30 +1,9 @@
-.ipynb_checkpoints/
-20220723/
-20220725/
-20220726/
-20220727/
-20220730/
-20220731/
-20220801/
-20220807/
-tests/
-timelapse/
-20220727_old/
-denoised_frames_test/
-faam-video*/
-output_frames/
-cloud_pass_frames/
-*.nc
-faam-video
-__pycache__/
-figures/
-figures_30/
-cloud_heights*.csv
-cloud_pass_frames_old/
-job04.err
-job04.out
-logs/
-pass_276_2022-07-30 16:59:26_ffc.png
-pass_278_2022-07-30 17:08:52_ffc.png
-pass_297_2022-07-31 17:44:32_ffc.png
+cloud_heights/
+faam-video/
+frames/
+pass_frames/
 scripts/__pycache__/
+scripts/*~
+scripts/edge_im/
+scripts/mask_im/
+scripts/logs/

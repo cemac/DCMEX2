@@ -99,7 +99,10 @@ for input_file in sorted(glob.glob(input_glob)):
         cleaned_frame = np.zeros_like(frame)
         for c in range(3):
             channel = frame[:, :, c]
-            channel = cv2.bilateralFilter(channel, 12, 100, 100)
+            if date_to_use==20220725:
+               channel = cv2.bilateralFilter(channel, 12, 150, 150)
+            else:
+               channel = cv2.bilateralFilter(channel, 12, 100, 100)
             #channel = cv2.GaussianBlur(channel, (7, 7), 0)
             # cleaned_frame: already filtered in all 3 channels
             cleaned_frame[:, :, c] = channel

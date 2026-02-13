@@ -14,7 +14,7 @@ echo "activating python env"
 conda activate cloud_heights
 
 
-dates=(20220730 20220807)
+dates=(20220801 20220802 20220803 20220804 20220805 20220806 20220808)
 
 
 # Loop over each date
