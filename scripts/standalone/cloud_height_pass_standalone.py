@@ -21,7 +21,7 @@ if module_dir not in sys.path:
     sys.path.append(module_dir)
 import height_calculator as hc
 # dummy file name
-file_name_full = '/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/cloud_heights/20220723/pass_271_ffc/frame_c307_20220730_162917_bluesky_ffc.png'
+file_name_full = '/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/cloud_heights/20220723/pass_271_ffc/frame_c307_20220730_162917_bluesky_ffc.png'
 # set the camera name this chages the edge detection settings, and pitch correction
 
 # Initialize the argument parser
@@ -59,7 +59,7 @@ if args.px is not None:
 
 # Print the values to verify
 print(f'file_name_full: {file_name_full}')
-BASE_DIR = Path("/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/cloud_heights/").resolve()
+BASE_DIR = Path("/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/cloud_heights/").resolve()
 file_path = Path(file_name_full).resolve()
 if not file_path.is_relative_to(BASE_DIR):
         print(f"Error: File {file_path} is not inside {BASE_DIR}")
@@ -86,7 +86,7 @@ def extract_pass_number(file_name):
 
 pass_number = extract_pass_number(file_name_full)
 print('pass number: ', pass_number)
-cloud_passes = pd.read_csv('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/scripts/input_data/FAAM_cloudpass_info.csv')
+cloud_passes = pd.read_csv('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/scripts/input_data/FAAM_cloudpass_info.csv')
 
 
 def extract_timestamp_from_filename(filepath):
@@ -255,12 +255,12 @@ timeframe= file_name.split('_')[3]
 timestamp = pd.to_datetime(date+'_'+timeframe, format="%Y%m%d_%H%M%S")
 if isinstance(pass_number, list):
     print('pass is a subpass')
-    print('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/pass_frames/'+date+'/'+camera_name+'/pass_'+pass_number[0]+'_'+pass_number[1]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
-    image_file = glob.glob('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/pass_frames/'+date+'/'+camera_name+'/pass_'+pass_number[0]+'_'+pass_number[1]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
+    print('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/pass_frames/'+date+'/'+camera_name+'/pass_'+pass_number[0]+'_'+pass_number[1]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
+    image_file = glob.glob('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/pass_frames/'+date+'/'+camera_name+'/pass_'+pass_number[0]+'_'+pass_number[1]+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
 else:
     print('primary pass')
-    print('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/pass_frames/'+date+'/'+camera_name+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
-    image_file = glob.glob('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/pass_frames/'+date+'/'+camera_name+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
+    print('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/pass_frames/'+date+'/'+camera_name+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')
+    image_file = glob.glob('/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/pass_frames/'+date+'/'+camera_name+'/pass_'+pass_number+'_*_'+camera_name+'/'+file_name.split('.')[0]+'.png')[0]
 print('Date and Time: ', image_file)
 print('Processing: ', file_name)
 print('Pass number: ', pass_number)

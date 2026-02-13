@@ -59,7 +59,7 @@ if args.px is not None:
 
 # Print the values to verify
 print(f'file_name_full: {file_name_full}')
-base_folder="/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/"
+base_folder="/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/"
 BASE_DIR = Path(base_folder).resolve()
 file_path = Path(file_name_full).resolve()
 if not file_path.is_relative_to(BASE_DIR):

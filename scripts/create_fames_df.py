@@ -19,7 +19,7 @@ if args.rfc:
    camera='rfc'
 
 letter=['a','b','c','d','e','f','g','h','j','k']
-root_folder = '/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/NEW/pass_frames'
+root_folder = '/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/pass_frames'
 output_folder = glob.glob('../frames/*/'+date+'/' + camera +'/*.png')
 cloud_passes = pd.read_csv('input_data/FAAM_cloudpass_info.csv')
 
