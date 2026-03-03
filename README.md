@@ -14,16 +14,16 @@
 
 # DCMEX2 - Automated Measuring of cloud height from aircraft videos
 
-This repository is part of the [Deep Convective Microphysics Experiment (DCMEX)](https://cloudsense.ac.uk/dcmex/) project. This repository follows on from the work done in [DCMEX repository](https://github.com/cemac/DCMEX) which automated measuring cloud heights from ground camera timelapses. 
+This repository is part of the [Deep Convective Microphysics Experiment (DCMEX)](https://cloudsense.ac.uk/dcmex/) project. This repository follows on from the work done in [DCMEX repository](https://github.com/cemac/DCMEX), which automated measuring cloud heights from ground camera timelapses. 
 
 
-The code here attempts to automatically detect the top height from [FAAM]() aircraft video during a 2022 field campaign using:
+The code here attempts to automatically detect the top height from [FAAM](https://faam.ac.uk/) aircraft video during a 2022 field campaign using:
 
-* Aircraft instrumentation data, such as GPS, altitude etc
-* Video footage from air craft mounted cameras.
+* Aircraft instrumentation data, such as GPS, altitude, etc
+* Video footage from aircraft-mounted cameras.
 
 
-The footage was preproccessed to remove noise and separated out into frames, information on timings of the cloud top passes were used to catelogue frames into the relevant cloud pass groups. We then selected images that contained sky and used open CV image processing tools to detected the cloud top in in the image. This information alongside estimated distance from the aircraft instrument data and cloud pass dataset can be used in optical equations to estimate the cloud top height. 
+The footage was preprocessed to remove noise and separated out into frames. Information on timings of the cloud top passes was used to catalogue frames into the relevant cloud pass groups. We then selected images that contained sky and used OpenCV image processing tools to detect the cloud top in the image. This information, alongside estimated distance from the aircraft instrument data and cloud pass dataset, can be used in optical equations to estimate the cloud top height. 
 
 All the methodology is outlined in the [DCMEX wiki](https://github.com/cemac/DCMEX2/wiki)
 
@@ -36,12 +36,12 @@ We also provide standalone tools:
 3. `cloud_height_pass_standalone.py` Estimate cloud top height from pass images, option to override pixel and distance for height estimation. 
 3. `procesvids_single.py` process famm video to remove noise and clip and speed up as desired to output mp4s and GIFs.
 
-more information on these tools can be found on the [stand alone tools wiki](https://github.com/cemac/DCMEX2/wiki/Stand-Alone-Tools)
+More information on these tools can be found on the [stand-alone tools wiki](https://github.com/cemac/DCMEX2/wiki/Stand-Alone-Tools)
 
 
 # Requirements
 
-python requirements are provided in the DCMEX2.yml file
+Python requirements are provided in the DCMEX2.yml file
 
 
 # Documentation
