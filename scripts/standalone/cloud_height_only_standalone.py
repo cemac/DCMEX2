@@ -16,7 +16,7 @@ home = Path.home()
 import pandas as pd
 from datetime import timedelta
 import argparse
-module_dir = "/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/"
+module_dir = "/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/scripts"
 if module_dir not in sys.path:
     sys.path.append(module_dir)
 import height_calculator as hc
@@ -227,7 +227,7 @@ try:
     legend_text = "Legend:\n D  = Distance\n CTH = Cloud Top Height\n APH = Aircraft Pass Height"
 
     # Position the text at the desired location
-    plt.text(730, 16, legend_text, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
+    plt.text(756, 16, legend_text, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
    
 except ValueError:
     print('skipping')
@@ -243,10 +243,10 @@ y = [img.shape[0] / 2 - line_length * np.sin(angle_rad), img.shape[0] / 2 + line
 
 # Plot line
 plt.plot(x, y, color='red',linestyle='dashed',alpha=0.3)
-plt.title('Manual cloud height estimate for '+date, fontsize=20)
+plt.title('Manual cloud height estimate for '+date, fontsize=18)
 
 
-
+plt.tight_layout()
 plt.savefig('{}_{}_{}.png'.format(date,times,camera),
                     bbox_inches='tight', pad_inches=0.5)
 print('saving to: ', '{}_{}_{}.png'.format(date,times,camera))

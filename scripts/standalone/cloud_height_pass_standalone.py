@@ -16,7 +16,7 @@ home = Path.home()
 import pandas as pd
 from datetime import timedelta
 import argparse
-module_dir = "/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/"
+module_dir = "/gws/ssde/j25a/dcmex/users/hburns/DCMEX2/scripts/"
 if module_dir not in sys.path:
     sys.path.append(module_dir)
 import height_calculator as hc
@@ -490,7 +490,7 @@ try:
     legend_text = "Legend:\n D  = Distance\n CTH = Cloud Top Height\n APH = Aircraft Pass Height"
 
     # Position the text at the desired location
-    plt.text(730, 16, legend_text, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
+    plt.text(757, 16, legend_text, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
    
 except ValueError:
     print('skipping')
@@ -511,7 +511,9 @@ if isinstance(pass_number, list):
     plt.title('Pass {}_{}_{}, Timestamp: {}.'.format(pass_number[0],pass_number[1],camera_name, timestamp)+'\n Estimated plane pass height {}m below cloud top using distance {}m'.format(int(pass_diff1),D), fontsize=20)
 else:
     plt.title('Pass {}_{}, Timestamp: {}.'.format(pass_number,camera_name, timestamp)+'\n Estimated plane pass height {}m below cloud top using distance {}m'.format(int(pass_diff1),D), fontsize=20)
-    
+
+plt.tight_layout()    
+
 try:
     if isinstance(pass_number, list):
         print(pass_number[0])
