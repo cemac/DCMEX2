@@ -14,7 +14,7 @@
 
 # DCMEX2 - Automated Measuring of cloud height from aircraft videos
 
-This repository is part of the [Deep Convective Microphysics Experiment (DCMEX)](https://cloudsense.ac.uk/dcmex/) project. This repository follows on from the work done in [DCMEX repository](https://github.com/cemac/DCMEX), which automated measuring cloud heights from ground camera timelapses. 
+This repository is part of the Deep Convective Microphysics Experiment (DCMEX) project. This repository follows on from the work done in [DCMEX repository](https://github.com/cemac/DCMEX), which automated measuring cloud heights from ground camera timelapses. 
 
 
 The code here attempts to automatically detect the top height from [FAAM](https://faam.ac.uk/) aircraft video during a 2022 field campaign using:
@@ -23,16 +23,18 @@ The code here attempts to automatically detect the top height from [FAAM](https:
 * Video footage from aircraft-mounted cameras.
 
 
-The footage was preprocessed to remove noise and separated out into frames. Information on timings of the cloud top passes was used to catalogue frames into the relevant cloud pass groups. We then selected images that contained sky and used OpenCV image processing tools to detect the cloud top in the image. This information, alongside estimated distance from the aircraft instrument data and cloud pass dataset, can be used in optical equations to estimate the cloud top height. 
+The footage was preprocessed to remove noise and separated out into frames. Information on the timings of the cloud top passes was used to catalogue frames into the relevant cloud pass groups. We then selected images that contained sky and used OpenCV image processing tools to detect the cloud top in the image. This information, alongside estimated distance from the aircraft instrument data and cloud pass dataset, can be used in optical equations to estimate the cloud top height. 
 
 All the methodology is outlined in the [DCMEX wiki](https://github.com/cemac/DCMEX2/wiki)
+
+Results are archived at [https://doi.org/10.5281/zenodo.20590534](https://zenodo.org/records/20590534), labeled images and timeserires of estimated cloud top heights from automatic processing. These images can be used with the standalone tool
 
 # DCMEX2 - StandAlone Tools.
 
 We also provide standalone tools:
 
 1. `height_calculator.py` 
-2. `cloud_height_only_standalone.py` Estimate cloud top height form any frame including not from cloud top passes. Must give manual distance estimate and pixel location.
+2. `cloud_height_only_standalone.py` Estimate cloud top height form any frame, including not from cloud top passes. Must give manual distance estimate and pixel location.
 3. `cloud_height_pass_standalone.py` Estimate cloud top height from pass images, option to override pixel and distance for height estimation. 
 3. `procesvids_single.py` process famm video to remove noise and clip and speed up as desired to output mp4s and GIFs.
 
